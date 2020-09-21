@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class InicioComponent implements OnInit {
 
-  Titulo= 'Pymes Demo - 2020';
+  Titulo= 'Pymes Demo - 2020 - Segundo Cuatrimestre!!!!';
   
   constructor() { }
 
