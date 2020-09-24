@@ -12,6 +12,7 @@ export class ArticuloFamilia {
     { IdArticuloFamilia: 7, Nombre: "Frio-Calor" },
     { IdArticuloFamilia: 8, Nombre: "Gps" },
     { IdArticuloFamilia: 9, Nombre: "Informatica" },
-    { IdArticuloFamilia: 10, Nombre: "Led - Lcd" }
+    { IdArticuloFamilia: 10, Nombre: "Led - Lcd" },
+    { IdArticuloFamilia: 11, Nombre: "Jardineria" }
   ];
   
