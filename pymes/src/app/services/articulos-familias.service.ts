@@ -13,7 +13,9 @@ import { of } from "rxjs";
 export class ArticulosFamiliasService {
   resourceUrl: string;
   constructor(private httpClient: HttpClient) {
-    this.resourceUrl = "http://labsys.frc.utn.edu.ar:8080/api/ArticulosFamilias/";
+    //this.resourceUrl = "http://labsys.frc.utn.edu.ar:8080/api/ArticulosFamilias/";
+    this.resourceUrl = "https://bitgocba.duckdns.org/api/articulosfamilias/";
+
   }
 
   get() {

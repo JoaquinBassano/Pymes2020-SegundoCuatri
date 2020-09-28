@@ -14,7 +14,7 @@ export class ArticulosFamiliasComponent implements OnInit {
 
   constructor(
     private articulosFamiliasService:  MockArticulosFamiliasService
-    //no funciona la url del labsys
+    //no funciona la url del labsys, pero si la nueva, que es en casa de uno de los profes
     //private articulosFamiliasService:  ArticulosFamiliasService
     ){}
 
