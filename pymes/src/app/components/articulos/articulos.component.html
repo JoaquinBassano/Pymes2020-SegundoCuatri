@@ -3,20 +3,20 @@
 
 
 <!-- Formulario Filtro de búsqueda, se ve cuando la AccionABMC es "L"(busqueda/listado)-->
-<form name="FormFiltro" class="bg-light" *ngIf="AccionABMC == 'L'">
+<form name="FormFiltro" [formGroup]='FormFiltro' class="bg-light" *ngIf="AccionABMC == 'L'">
     <div class="form-group row">
       <label class="col-form-label col-sm-2 col-sm-offset-1">
               Nombre:
           </label>
       <div class="col-sm-3">
-        <input type="text" name="Nombre" class="form-control" />
+        <input type="text" name="Nombre" formControlName="Nombre" class="form-control" />
           </div>
         <label class="col-form-label col-sm-2  text-left">
               Activo:
           </label>
         <div class="col-sm-3">
-          <select class="form-control" name="Activo" >
-              <option *ngFor="let opt of OpcionesActivo">
+          <select class="form-control" formControlName="Activo" name="Activo" >
+              <option *ngFor="let opt of OpcionesActivo" [ngValue]="opt.Id">
                           {{ opt.Nombre }}
               <option>            
             </select>
@@ -109,7 +109,7 @@
 
 
 <!-- Registro en Alta,Modificacion o Consulta -->
-<form name="FormReg" class="bg-light"  *ngIf="AccionABMC != 'L'">
+<form name="FormReg" [formGroup]='FormReg' class="bg-light"  *ngIf="AccionABMC != 'L'">
 
     <fieldset [disabled]="AccionABMC==='C'">
         <!--campo nombre-->
@@ -118,7 +118,7 @@
                 Nombre <span class="text-danger">*</span>
             </label>
             <div class="col-sm-6">
-                <input type="text" class="form-control" />
+                <input type="text" formControlName="Nombre" class="form-control" />
             </div>
         </div>
 
@@ -128,7 +128,7 @@
                 Precio <span class="text-danger">*</span>
             </label>
             <div class="col-sm-6">
-                <input type="text" name="Precio" class="form-control" />
+                <input type="text" formControlName="Precio" name="Precio" class="form-control" />
             </div>
         </div>
 
@@ -139,7 +139,7 @@
                 Stock <span class="text-danger">*</span>
             </label>
             <div class="col-sm-6">
-                <input type="text" name="Stock" class="form-control" />
+                <input type="text" name="Stock" formControlName="Stock" class="form-control" />
 
             </div>
         </div>
@@ -150,7 +150,7 @@
                 Codigo De Barra <span class="text-danger">*</span>
             </label>
             <div class="col-sm-6">
-                <input type="text" name="CodigoDeBarra" class="form-control" />
+                <input type="text" name="CodigoDeBarra" formControlName="CodigoDeBarra" class="form-control" />
 
             </div>
         </div>
@@ -161,8 +161,8 @@
                 Familia <span class="text-danger">*</span>
             </label>
             <div class="col-sm-6">
-                <select name="IdArticuloFamilia" class="form-control">
-                    <option *ngFor="let opt of Familias">
+                <select name="IdArticuloFamilia" formControlName="IdArticuloFamilia" class="form-control">
+                    <option *ngFor="let opt of Familias" [ngValue]="opt.IdArticuloFamilia">
                         {{ opt.Nombre }}
                     <option>
                 </select>
@@ -175,8 +175,7 @@
                 Fecha de alta <span class="text-danger">*</span>
             </label>
             <div class="col-sm-6">
-                <input class="form-control"
-                       name="FechaAlta" />
+                <input class="form-control" name="FechaAlta" formControlName="FechaAlta"/>
             </div>
         </div>
 
@@ -184,8 +183,8 @@
         <div class="form-group row">
             <label class="col-form-label col-sm-2 col-sm-offset-2" for="Activo">Activo</label>
             <div class="col-sm-6">
-                <select name="Activo" disabled class="form-control">
-                    <option *ngFor="let opt of OpcionesActivo">
+                <select name="Activo" disabled formControlName="Activo" class="form-control">
+                    <option *ngFor="let opt of OpcionesActivo" [ngValue]="opt.Id" >
                         {{ opt.Nombre }}
                     <option>
                 </select>
