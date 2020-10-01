@@ -4,6 +4,7 @@ import { ArticuloFamilia } from "../../models/articulo-familia";
 import { MockArticulosService } from "../../services/mock-articulos.service";
 import { MockArticulosFamiliasService } from "../../services/mock-articulos-familias.service";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ArticulosService } from "../../services/articulos.service";
 
 @Component({
   selector: "app-articulos",
@@ -41,7 +42,8 @@ export class ArticulosComponent implements OnInit {
 
   constructor(
     public formBuilder: FormBuilder,
-    private articulosService: MockArticulosService,
+    //private articulosService: MockArticulosService,
+    private articulosService: ArticulosService,
     private articulosFamiliasService: MockArticulosFamiliasService,
   ) {}
 
@@ -94,7 +96,17 @@ export class ArticulosComponent implements OnInit {
   // Obtengo un registro especifico según el Id
   BuscarPorId(Dto, AccionABMC) {
     window.scroll(0, 0); // ir al incio del scroll
-    this.AccionABMC = AccionABMC;
+    this.articulosService.getById(Dto.IdArticulo).subscribe((res: any) => {
+  
+      const itemCopy = { ...res };  // hacemos copia para no modificar el array original del mock
+      
+      //formatear fecha de  ISO 8061 a string dd/MM/yyyy
+      var arrFecha = itemCopy.FechaAlta.substr(0, 10).split("-");
+      itemCopy.FechaAlta = arrFecha[2] + "/" + arrFecha[1] + "/" + arrFecha[0];
+
+      this.FormReg.patchValue(itemCopy);
+      this.AccionABMC = AccionABMC;
+    });
   }
 
   Consultar(Dto) {
@@ -110,28 +122,71 @@ export class ArticulosComponent implements OnInit {
     this.BuscarPorId(Dto, "M");
   }
 
-  // grabar tanto altas como modificaciones
-  Grabar() {
-    alert("Registro Grabado!");
-    this.Volver();
-  }
+// grabar tanto altas como modificaciones
+Grabar() {
+ 
+  //hacemos una copia de los datos del formulario, para modificar la fecha y luego enviarlo al servidor
+  const itemCopy = { ...this.FormReg.value };
 
-  ActivarDesactivar(Dto) {
-    var resp = confirm(
-      "Esta seguro de " +
-        (Dto.Activo ? "desactivar" : "activar") +
-        " este registro?");
-    if (resp === true)
-      alert("registro activado/desactivado!");
-  }
+  //convertir fecha de string dd/MM/yyyy a ISO para que la entienda webapi
+  var arrFecha = itemCopy.FechaAlta.substr(0, 10).split("/");
+  if (arrFecha.length == 3)
+    itemCopy.FechaAlta = 
+        new Date(
+          arrFecha[2],
+          arrFecha[1] - 1,
+          arrFecha[0]
+        ).toISOString();
 
-  // Volver desde Agregar/Modificar
-  Volver() {
-    this.AccionABMC = "L";
+  // agregar post
+  if (itemCopy.IdArticulo == 0 || itemCopy.IdArticulo == null) {
+    this.articulosService.post(itemCopy).subscribe((res: any) => {
+      this.Volver();
+      alert('Registro agregado correctamente.');
+      this.Buscar();
+    });
+  } else {
+    // modificar put
+    this.articulosService
+      .put(itemCopy.IdArticulo, itemCopy)
+      .subscribe((res: any) => {
+        this.Volver();
+        alert('Registro modificado correctamente.');
+        this.Buscar();
+      });
   }
+}
 
-  ImprimirListado() {
-    alert('Sin desarrollar...');
+GetArticuloFamiliaNombre(Id){
+  var ArticuloFamilia = this.Familias.filter(x => x.IdArticuloFamilia === Id)[0];
+  if (ArticuloFamilia)
+      return ArticuloFamilia.Nombre;
+  else
+    return "";
+}
+
+ActivarDesactivar(Dto) {
+  var resp = confirm(
+    "Esta seguro de " +
+      (Dto.Activo ? "desactivar" : "activar") +
+      " este registro?");
+  if (resp === true)
+  {
+    this.articulosService  
+        .delete(Dto.IdArticulo)
+        .subscribe((res: any) => 
+          this.Buscar()
+        );
   }
+}
+
+// Volver desde Agregar/Modificar
+Volver() {
+  this.AccionABMC = "L";
+}
+
+ImprimirListado() {
+  alert('Sin desarrollar...');
+}
 
 }
