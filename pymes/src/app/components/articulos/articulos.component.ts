@@ -5,6 +5,7 @@ import { MockArticulosService } from "../../services/mock-articulos.service";
 import { MockArticulosFamiliasService } from "../../services/mock-articulos-familias.service";
 import { FormBuilder, FormGroup, Validators, FormControl } from "@angular/forms";
 import { ArticulosService } from "../../services/articulos.service";
+import { ModalDialogService } from "../../services/modal-dialog.service";
 
 @Component({
   selector: "app-articulos",
@@ -47,6 +48,7 @@ export class ArticulosComponent implements OnInit {
     private articulosService: MockArticulosService,
     //private articulosService: ArticulosService,
     private articulosFamiliasService: MockArticulosFamiliasService,
+    private modalDialogService: ModalDialogService
   ) {}
 
   FormFiltro: FormGroup;
@@ -123,7 +125,7 @@ export class ArticulosComponent implements OnInit {
     this.submitted = false;
     this.FormReg.markAsUntouched();
     if (!Dto.Activo) {
-      alert("No puede modificarse un registro Inactivo.");
+      this.modalDialogService.Alert("No puede modificarse un registro Inactivo.");
       return;
     }
     this.BuscarPorId(Dto, "M");
@@ -154,7 +156,7 @@ Grabar() {
   if (itemCopy.IdArticulo == 0 || itemCopy.IdArticulo == null) {
     this.articulosService.post(itemCopy).subscribe((res: any) => {
       this.Volver();
-      alert('Registro agregado correctamente.');
+      this.modalDialogService.Alert('Registro agregado correctamente.');
       this.Buscar();
     });
   } else {
@@ -163,7 +165,7 @@ Grabar() {
       .put(itemCopy.IdArticulo, itemCopy)
       .subscribe((res: any) => {
         this.Volver();
-        alert('Registro modificado correctamente.');
+        this.modalDialogService.Alert('Registro modificado correctamente.');
         this.Buscar();
       });
   }
@@ -178,18 +180,21 @@ GetArticuloFamiliaNombre(Id){
 }
 
 ActivarDesactivar(Dto) {
-  var resp = confirm(
+  this.modalDialogService.Confirm(
     "Esta seguro de " +
       (Dto.Activo ? "desactivar" : "activar") +
-      " este registro?");
-  if (resp === true)
-  {
-    this.articulosService  
+      " este registro?",
+    undefined,
+    undefined,
+    undefined,
+    () =>
+      this.articulosService  
         .delete(Dto.IdArticulo)
         .subscribe((res: any) => 
           this.Buscar()
-        );
-  }
+        ),
+    null
+  );
 }
 
 // Volver desde Agregar/Modificar
@@ -198,7 +203,7 @@ Volver() {
 }
 
 ImprimirListado() {
-  alert('Sin desarrollar...');
+  this.modalDialogService.Alert('Sin desarrollar...');
 }
 
 }
